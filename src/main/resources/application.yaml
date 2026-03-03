@@ -1,0 +1,14 @@
+#spring:
+#  datasource:
+#    url: jdbc:postgresql://localhost:5432/testSecondDB
+#    username: postgres
+#    password: "12345"
+#    driver-class-name: org.postgresql.Driver
+
+    jpa:
+      show-sql: true # Convenient showing sql requests in console
+      hibernate:
+        ddl-auto: update # Spring gonna create/update table to suit your Java-class by its self
+        properties:
+          hibernate:
+            dialect: org.hibernate.dialect.PostgreSQLDialect
