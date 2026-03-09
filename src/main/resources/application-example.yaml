@@ -1,8 +1,8 @@
 spring:
   datasource:
-    url: jdbc:postgresql://localhost:5432/capybarasApi
+    url: jdbc:postgresql://localhost:YOUR_PORT/YOUR_DATABASE
     username: postgres
-    password: "12345"
+    password: "YOUR_PASSWORD"
     driver-class-name: org.postgresql.Driver
 
   jpa:
@@ -10,5 +10,5 @@ spring:
     hibernate:
       ddl-auto: update # Spring gonna create/update table to suit your Java-class by its self
     properties:
-        hibernate:
-          dialect: org.hibernate.dialect.PostgreSQLDialect
+      hibernate:
+        dialect: org.hibernate.dialect.PostgreSQLDialect
