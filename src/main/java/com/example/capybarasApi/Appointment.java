@@ -18,6 +18,7 @@ public class Appointment {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
+    @Column(nullable = false, name = "start_time")
     private LocalDateTime startTime;
 
     @Enumerated(EnumType.STRING)

@@ -1,6 +1,7 @@
 package com.example.capybarasApi;
 
 import com.example.capybarasApi.enums.DifficultyLevel;
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import jakarta.persistence.*;
 import lombok.Data;
@@ -22,7 +23,7 @@ public class TypeOfService {
     private String serviceName;
 
     @JsonProperty("description")
-    @Column(nullable = false, name = "desc")
+    @Column(nullable = false, name = "description")
     private String description;
 
     @JsonProperty("duration")
@@ -36,6 +37,7 @@ public class TypeOfService {
     @Enumerated(EnumType.STRING)
     private DifficultyLevel difficultyLevel;
 
+    @JsonIgnore
     @ManyToMany(mappedBy = "services")
     private List<Appointment> appointments;
 }

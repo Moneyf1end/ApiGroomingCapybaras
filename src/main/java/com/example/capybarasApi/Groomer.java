@@ -1,5 +1,6 @@
 package com.example.capybarasApi;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import jakarta.persistence.*;
 import lombok.Data;
@@ -32,6 +33,7 @@ public class Groomer {
     @Column(nullable = false, name = "experienceYears")
     private int experience;
 
+    @JsonIgnore
     @OneToMany(mappedBy = "groomer")
     private List<Appointment> appointments;
 }
