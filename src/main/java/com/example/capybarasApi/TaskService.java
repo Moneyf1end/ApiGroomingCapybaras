@@ -25,6 +25,17 @@ public class TaskService {
     private final TypeOfServiceRepository typeOfServiceRepository;
     private final TaskMapper taskMapper;
 
+    public Iterable<TypeOfService> getAllServices() {
+        log.info("Fetching all services");
+        return typeOfServiceRepository.findAll();
+    }
+
+    public TypeOfService getServiceById(Long id) {
+        log.info("Fetching service by id: {}", id);
+        return typeOfServiceRepository.findById(id)
+                .orElseThrow(() -> new RuntimeException("Service not found"));
+    }
+
     public Owner updateOwnerById(Long id, Owner owner) {
         Optional<Owner> ownerById = ownerRepository.findById(id);
 
@@ -102,7 +113,7 @@ public class TaskService {
     public TypeOfService updateTypeOfServiceById(Long id, TypeOfService service) {
         TypeOfService serviceById = typeOfServiceRepository.findById(id)
                 .orElseThrow(() -> new
-                        ResponseStatusException(HttpStatus.NOT_FOUND, "Groomer not found"));
+                        ResponseStatusException(HttpStatus.NOT_FOUND, "TypeOfService not found"));
 
         serviceById.setDescription(service.getDescription());
         serviceById.setDifficultyLevel(service.getDifficultyLevel());
@@ -112,23 +123,4 @@ public class TaskService {
         return typeOfServiceRepository.save(serviceById);
     }
 }
-
-    @Service
-    @RequiredArgsConstructor
-    @Slf4j
-    public class TaskService {
-
-        private final TypeOfServiceRepository typeOfServiceRepository;
-
-        public Iterable<TypeOfService> getAllServices() {
-            log.info("Fetching all services");
-            return typeOfServiceRepository.findAll();
-        }
-
-        public TypeOfService getServiceById(Long id) {
-            log.info("Fetching service by id: {}", id);
-            return typeOfServiceRepository.findById(id)
-                    .orElseThrow(() -> new RuntimeException("Service not found"));
-        }
-    }
 
