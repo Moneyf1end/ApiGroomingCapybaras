@@ -112,3 +112,23 @@ public class TaskService {
         return typeOfServiceRepository.save(serviceById);
     }
 }
+
+    @Service
+    @RequiredArgsConstructor
+    @Slf4j
+    public class TaskService {
+
+        private final TypeOfServiceRepository typeOfServiceRepository;
+
+        public Iterable<TypeOfService> getAllServices() {
+            log.info("Fetching all services");
+            return typeOfServiceRepository.findAll();
+        }
+
+        public TypeOfService getServiceById(Long id) {
+            log.info("Fetching service by id: {}", id);
+            return typeOfServiceRepository.findById(id)
+                    .orElseThrow(() -> new RuntimeException("Service not found"));
+        }
+    }
+
