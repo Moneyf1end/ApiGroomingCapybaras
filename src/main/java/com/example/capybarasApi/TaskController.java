@@ -16,6 +16,19 @@ import org.springframework.web.bind.annotation.*;
 public class TaskController {
     private final TaskService taskService;
 
+    // GET METHODS --------------------------------------------------------------------------------------------
+    @GetMapping("/{id}")
+    public TypeOfService getServiceById(@PathVariable @Min(0) Long id) {
+        log.info("Getting service with id: {}", id);
+        return taskService.getServiceById(id);
+    }
+
+    @GetMapping
+    public Iterable<TypeOfService> getAllServices() {
+        log.info("Getting all services");
+        return taskService.getAllServices();
+    }
+
     // PUT(PATCH) METHODS -------------------------------------------------------------------------------------
     @PutMapping("/updateOwner/{id}")
     public Owner updateOwnerById(@PathVariable @Min(0) Long id, @RequestBody @Validated Owner owner) {
@@ -41,20 +54,4 @@ public class TaskController {
     public TypeOfService updateTypeOfServiceById(@PathVariable @Min(0) Long id, @RequestBody @Validated TypeOfService typeOfService) {
         return taskService.updateTypeOfServiceById(id, typeOfService);
     }
-
-    private final TaskService taskService;
-
-    @GetMapping("/{id}")
-    public TypeOfService getServiceById(@PathVariable @Min(0) Long id) {
-        log.info("Getting service with id: {}", id);
-        return taskService.getServiceById(id);
-    }
-
-    @GetMapping
-    public Iterable<TypeOfService> getAllServices() {
-        log.info("Getting all services");
-        return taskService.getAllServices();
-    }
-
-
 }
