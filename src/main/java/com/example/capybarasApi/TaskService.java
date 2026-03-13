@@ -1,19 +1,19 @@
 package com.example.capybarasApi;
 
+import com.example.capybarasApi.dto.UpdateAppointmentServiceRequestDto;
+import com.example.capybarasApi.dto.UpdateAppointmentServiceResponseDto;
 import com.example.capybarasApi.dto.UpdateOwnerByCapybaraIdRequestDto;
 import com.example.capybarasApi.dto.UpdatedOwnerByCapybaraIdResponseDto;
 import com.example.capybarasApi.mapper.TaskMapper;
-import com.example.capybarasApi.repository.CapybaraRepository;
-import com.example.capybarasApi.repository.GroomerRepository;
-import com.example.capybarasApi.repository.OwnerRepository;
-import com.example.capybarasApi.repository.TypeOfServiceRepository;
+import com.example.capybarasApi.repository.*;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 import org.springframework.web.server.ResponseStatusException;
 
-import java.util.Optional;
+import java.util.*;
+import java.util.stream.Collectors;
 
 @Service
 @RequiredArgsConstructor
@@ -23,13 +23,13 @@ public class TaskService {
     private final CapybaraRepository capybaraRepository;
     private final GroomerRepository groomerRepository;
     private final TypeOfServiceRepository typeOfServiceRepository;
+    private final AppointmentRepository appointmentRepository;
     private final TaskMapper taskMapper;
 
     public Iterable<TypeOfService> getAllServices() {
         log.info("Fetching all services");
         return typeOfServiceRepository.findAll();
     }
-
     public TypeOfService getServiceById(Long id) {
         log.info("Fetching service by id: {}", id);
         return typeOfServiceRepository.findById(id)
@@ -93,7 +93,7 @@ public class TaskService {
         capybara.setOwner(owner);
 
         Capybara capybaraAfterSave = capybaraRepository.save(capybara);
-        return taskMapper.responseDto(capybaraAfterSave);
+        return taskMapper.updatedOwnerByCapybaraIdResponseDto(capybaraAfterSave);
     }
 
     public Groomer updateGroomerById(Long id, Groomer groomer) {
@@ -121,6 +121,32 @@ public class TaskService {
         serviceById.setPrice(service.getPrice());
 
         return typeOfServiceRepository.save(serviceById);
+    }
+
+    public Appointment updateAppointment(Long id, Appointment appointment) {
+        Appointment appointmentById = appointmentRepository.findById(id)
+                .orElseThrow(() -> new
+                ResponseStatusException(HttpStatus.NOT_FOUND, "Appointment not found"));
+
+        appointmentById.setStartTime(appointment.getStartTime());
+        appointmentById.setStatus(appointment.getStatus());
+        return appointmentRepository.save(appointmentById);
+    }
+
+    public UpdateAppointmentServiceResponseDto updateAppointmentService(Long id, UpdateAppointmentServiceRequestDto serviceRequestDto) {
+        Appointment appointmentByIdForService = appointmentRepository.findById(id)
+                .orElseThrow(() -> new
+                        ResponseStatusException(HttpStatus.NOT_FOUND, "Appointment not found"));
+
+        List<TypeOfService> listTypeOfServiceById = typeOfServiceRepository.findAllById(serviceRequestDto.getServiceIds());
+
+        if (listTypeOfServiceById.size() != serviceRequestDto.getServiceIds().size()) throw new ResponseStatusException(HttpStatus.NOT_FOUND, "Service not found");
+
+        appointmentByIdForService.setServices(listTypeOfServiceById);
+
+        Appointment appointmentAfterSave = appointmentRepository.save(appointmentByIdForService);
+
+        return taskMapper.updateAppointmentServiceResponseDto(appointmentAfterSave);
     }
 }
 

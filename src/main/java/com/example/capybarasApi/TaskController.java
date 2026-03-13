@@ -1,5 +1,7 @@
 package com.example.capybarasApi;
 
+import com.example.capybarasApi.dto.UpdateAppointmentServiceRequestDto;
+import com.example.capybarasApi.dto.UpdateAppointmentServiceResponseDto;
 import com.example.capybarasApi.dto.UpdateOwnerByCapybaraIdRequestDto;
 import com.example.capybarasApi.dto.UpdatedOwnerByCapybaraIdResponseDto;
 import jakarta.validation.constraints.Min;
@@ -53,5 +55,15 @@ public class TaskController {
     @PutMapping("/updateTypeOfService/{id}")
     public TypeOfService updateTypeOfServiceById(@PathVariable @Min(0) Long id, @RequestBody @Validated TypeOfService typeOfService) {
         return taskService.updateTypeOfServiceById(id, typeOfService);
+    }
+
+    @PutMapping("/updateAppointment/{id}")
+    public Appointment updateAppointment(@PathVariable @Min(0) Long id, @RequestBody @Validated Appointment appointment) {
+        return taskService.updateAppointment(id, appointment);
+    }
+
+    @PutMapping("/appointments/{id}/services")
+    public UpdateAppointmentServiceResponseDto updateAppointmentService(@PathVariable @Min(0) Long id, @RequestBody @Validated UpdateAppointmentServiceRequestDto serviceRequestDto) {
+        return taskService.updateAppointmentService(id, serviceRequestDto);
     }
 }
