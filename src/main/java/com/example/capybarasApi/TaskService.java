@@ -26,7 +26,7 @@ public class TaskService {
     private final AppointmentRepository appointmentRepository;
     private final TaskMapper taskMapper;
 
-    // SERVICES
+    // ---------- SERVICES ----------
 
     public Iterable<TypeOfService> getAllServices() {
         log.info("Fetching all services");
@@ -39,7 +39,7 @@ public class TaskService {
                 .orElseThrow(() -> new RuntimeException("Service not found"));
     }
 
-    //  CAPYBARAS
+    // ---------- CAPYBARAS ----------
 
     public Iterable<Capybara> getAllCapybaras() {
         log.info("Fetching all capybaras");
@@ -52,7 +52,7 @@ public class TaskService {
                 .orElseThrow(() -> new RuntimeException("Capybara not found"));
     }
 
-    //  GROOMERS
+    // ---------- GROOMERS ----------
 
     public Iterable<Groomer> getAllGroomers() {
         log.info("Fetching all groomers");
@@ -65,7 +65,7 @@ public class TaskService {
                 .orElseThrow(() -> new RuntimeException("Groomer not found"));
     }
 
-    //  OWNERS
+    // ---------- OWNERS ----------
 
     public Iterable<Owner> getAllOwners() {
         log.info("Fetching all owners");
@@ -77,7 +77,7 @@ public class TaskService {
         return ownerRepository.findById(id)
                 .orElseThrow(() -> new RuntimeException("Owner not found"));
     }
-    //  APPOINTMENTS
+    // ---------- APPOINTMENTS ----------
 
     public Iterable<Appointment> getAllAppointments() {
         log.info("Fetching all appointments");
@@ -203,5 +203,60 @@ public class TaskService {
         Appointment appointmentAfterSave = appointmentRepository.save(appointmentByIdForService);
 
         return taskMapper.updateAppointmentServiceResponseDto(appointmentAfterSave);
+    }
+
+    // ---------- DELETE SERVICE ----------
+    public void deleteService(Long id) {
+        log.info("Deleting service with id: {}", id);
+
+        if (!typeOfServiceRepository.existsById(id)) {
+            throw new RuntimeException("Service not found");
+        }
+
+        typeOfServiceRepository.deleteById(id);
+    }
+
+    // ---------- DELETE CAPYBARA ----------
+    public void deleteCapybara(Long id) {
+        log.info("Deleting capybara with id: {}", id);
+
+        if (!capybaraRepository.existsById(id)) {
+            throw new RuntimeException("Capybara not found");
+        }
+
+        capybaraRepository.deleteById(id);
+    }
+
+    // ---------- DELETE GROOMER ----------
+    public void deleteGroomer(Long id) {
+        log.info("Deleting groomer with id: {}", id);
+
+        if (!groomerRepository.existsById(id)) {
+            throw new RuntimeException("Groomer not found");
+        }
+
+        groomerRepository.deleteById(id);
+    }
+
+    // ---------- DELETE OWNER ----------
+    public void deleteOwner(Long id) {
+        log.info("Deleting owner with id: {}", id);
+
+        if (!ownerRepository.existsById(id)) {
+            throw new RuntimeException("Owner not found");
+        }
+
+        ownerRepository.deleteById(id);
+    }
+
+    // ---------- DELETE APPOINTMENT ----------
+    public void deleteAppointment(Long id) {
+        log.info("Deleting appointment with id: {}", id);
+
+        if (!appointmentRepository.existsById(id)) {
+            throw new RuntimeException("Appointment not found");
+        }
+
+        appointmentRepository.deleteById(id);
     }
 }

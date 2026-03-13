@@ -19,7 +19,7 @@ import org.springframework.web.bind.annotation.*;
 public class TaskController {
     private final TaskService taskService;
 
-    // SERVICES
+    //---------- SERVICES ----------
     @GetMapping("/service")
     public Iterable<TypeOfService> getAllServices() {
         return taskService.getAllServices();
@@ -31,7 +31,7 @@ public class TaskController {
         return taskService.getServiceById(id);
     }
 
-    // CAPYBARAS
+    //---------- CAPYBARAS ----------
     @GetMapping("/capybara")
     public Iterable<Capybara> getAllCapybaras() {
         return taskService.getAllCapybaras();
@@ -42,7 +42,7 @@ public class TaskController {
         return taskService.getCapybaraById(id);
     }
 
-    // GROOMERS
+    //---------- GROOMERS ----------
     @GetMapping("/groomer")
     public Iterable<Groomer> getAllGroomers() {
         return taskService.getAllGroomers();
@@ -53,7 +53,7 @@ public class TaskController {
         return taskService.getGroomerById(id);
     }
 
-    //  OWNERS
+    // ---------- OWNERS ----------
     @GetMapping("/owner")
     public Iterable<Owner> getAllOwners() {
         return taskService.getAllOwners();
@@ -64,7 +64,7 @@ public class TaskController {
         return taskService.getOwnerById(id);
     }
 
-    // APPOINTMENTS
+    // ---------- APPOINTMENTS ----------
     @GetMapping("/appointment")
     public Iterable<Appointment> getAllAppointments() {
         return taskService.getAllAppointments();
@@ -108,6 +108,41 @@ public class TaskController {
     @PutMapping("/appointments/{id}/services")
     public UpdateAppointmentServiceResponseDto updateAppointmentService(@PathVariable @Min(0) Long id, @RequestBody @Validated UpdateAppointmentServiceRequestDto serviceRequestDto) {
         return taskService.updateAppointmentService(id, serviceRequestDto);
+    }
+
+    // ---------- DELETE SERVICE ----------
+    @DeleteMapping("/service/{id}")
+    public void deleteService(@PathVariable @Min(0) Long id) {
+        log.info("Deleting service with id: {}", id);
+        taskService.deleteService(id);
+    }
+
+    // ---------- DELETE CAPYBARA ----------
+    @DeleteMapping("/capybara/{id}")
+    public void deleteCapybara(@PathVariable @Min(0) Long id) {
+        log.info("Deleting capybara with id: {}", id);
+        taskService.deleteCapybara(id);
+    }
+
+    // ---------- DELETE GROOMER ----------
+    @DeleteMapping("/groomer/{id}")
+    public void deleteGroomer(@PathVariable @Min(0) Long id) {
+        log.info("Deleting groomer with id: {}", id);
+        taskService.deleteGroomer(id);
+    }
+
+    // ---------- DELETE OWNER ----------
+    @DeleteMapping("/owner/{id}")
+    public void deleteOwner(@PathVariable @Min(0) Long id) {
+        log.info("Deleting owner with id: {}", id);
+        taskService.deleteOwner(id);
+    }
+
+    // ---------- DELETE APPOINTMENT ----------
+    @DeleteMapping("/appointment/{id}")
+    public void deleteAppointment(@PathVariable @Min(0) Long id) {
+        log.info("Deleting appointment with id: {}", id);
+        taskService.deleteAppointment(id);
     }
 }
 
