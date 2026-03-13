@@ -109,6 +109,30 @@ public class TaskController {
     public UpdateAppointmentServiceResponseDto updateAppointmentService(@PathVariable @Min(0) Long id, @RequestBody @Validated UpdateAppointmentServiceRequestDto serviceRequestDto) {
         return taskService.updateAppointmentService(id, serviceRequestDto);
     }
+    // ---------------- POST ----------------
+    @PostMapping("/owner")
+    public Owner createOwner(@RequestBody @Validated Owner owner) {
+        return taskService.createOwner(owner);
+    }
+
+    @PostMapping("/capybara")
+    public Capybara createCapybara(@RequestBody @Validated Capybara capybara) {
+        return taskService.createCapybara(capybara);
+    }
+
+    @PostMapping("/groomer")
+    public Groomer createGroomer(@RequestBody @Validated Groomer groomer) {
+        return taskService.createGroomer(groomer);
+    }
+
+    @PostMapping("/service")
+    public TypeOfService createService(@RequestBody @Validated TypeOfService service) {
+        return taskService.createService(service);
+    }
+
+    @PostMapping("/appointment")
+    public Appointment createAppointment(@RequestBody @Validated Appointment appointment) {
+        return taskService.createAppointment(appointment);
 
     // ---------- DELETE SERVICE ----------
     @DeleteMapping("/service/{id}")

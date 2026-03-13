@@ -26,6 +26,8 @@ public class TaskService {
     private final AppointmentRepository appointmentRepository;
     private final TaskMapper taskMapper;
 
+
+    // SERVICES
     // ---------- SERVICES ----------
 
     public Iterable<TypeOfService> getAllServices() {
@@ -204,6 +206,33 @@ public class TaskService {
 
         return taskMapper.updateAppointmentServiceResponseDto(appointmentAfterSave);
     }
+    // ---------------------- POST METHODS ----------------------
+    public Owner createOwner(Owner owner) {
+        log.info("Creating new owner: {}", owner);
+        return ownerRepository.save(owner);
+    }
+
+    public Capybara createCapybara(Capybara capybara) {
+        log.info("Creating new capybara: {}", capybara);
+        return capybaraRepository.save(capybara);
+    }
+
+    public Groomer createGroomer(Groomer groomer) {
+        log.info("Creating new groomer: {}", groomer);
+        return groomerRepository.save(groomer);
+    }
+
+    public TypeOfService createService(TypeOfService service) {
+        log.info("Creating new service: {}", service);
+        return typeOfServiceRepository.save(service);
+    }
+
+    public Appointment createAppointment(Appointment appointment) {
+        log.info("Creating new appointment: {}", appointment);
+        return appointmentRepository.save(appointment);
+    }
+}
+
 
     // ---------- DELETE SERVICE ----------
     public void deleteService(Long id) {
