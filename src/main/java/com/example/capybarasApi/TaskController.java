@@ -10,15 +10,15 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
+
 @RestController
-@RequestMapping("/api")
+@RequestMapping("/api/service")
 @RequiredArgsConstructor
 @Slf4j
 @Validated
 public class TaskController {
     private final TaskService taskService;
 
-<<<<<<< artem-get-controllerservice
     // SERVICES
     @GetMapping("/service")
     public Iterable<TypeOfService> getAllServices() {
@@ -26,10 +26,7 @@ public class TaskController {
     }
 
     @GetMapping("/service/{id}")
-=======
     // GET METHODS --------------------------------------------------------------------------------------------
-    @GetMapping("/{id}")
->>>>>>> main
     public TypeOfService getServiceById(@PathVariable @Min(0) Long id) {
         return taskService.getServiceById(id);
     }
@@ -51,7 +48,6 @@ public class TaskController {
         return taskService.getAllGroomers();
     }
 
-<<<<<<< artem-get-controllerservice
     @GetMapping("/groomer/{id}")
     public Groomer getGroomerById(@PathVariable @Min(0) Long id) {
         return taskService.getGroomerById(id);
@@ -78,8 +74,6 @@ public class TaskController {
     public Appointment getAppointmentById(@PathVariable @Min(0) Long id) {
         return taskService.getAppointmentById(id);
     }
-}
-=======
     // PUT(PATCH) METHODS -------------------------------------------------------------------------------------
     @PutMapping("/updateOwner/{id}")
     public Owner updateOwnerById(@PathVariable @Min(0) Long id, @RequestBody @Validated Owner owner) {
@@ -116,4 +110,4 @@ public class TaskController {
         return taskService.updateAppointmentService(id, serviceRequestDto);
     }
 }
->>>>>>> main
+
