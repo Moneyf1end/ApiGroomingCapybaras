@@ -1,6 +1,7 @@
 package com.example.capybarasApi;
 
 import com.example.capybarasApi.enums.CapybarasMood;
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import jakarta.persistence.*;
 import lombok.Data;
@@ -34,6 +35,7 @@ public class Capybara {
     @Enumerated(EnumType.STRING)
     private CapybarasMood mood;
 
+    @JsonIgnore
     @OneToMany(mappedBy = "capybara", cascade = CascadeType.ALL)
     private List<Appointment> appointments;
 

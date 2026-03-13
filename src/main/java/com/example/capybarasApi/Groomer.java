@@ -1,5 +1,6 @@
 package com.example.capybarasApi;
 
+import com.example.capybarasApi.enums.GroomerGender;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import jakarta.persistence.*;
@@ -23,7 +24,8 @@ public class Groomer {
 
     @JsonProperty("gender")
     @Column(nullable = false, name = "gender")
-    private String gender;
+    @Enumerated(EnumType.STRING)
+    private GroomerGender gender;
 
     @JsonProperty("phone")
     @Column(nullable = false, name = "phone")
