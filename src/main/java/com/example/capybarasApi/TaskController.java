@@ -133,7 +133,7 @@ public class TaskController {
     @PostMapping("/appointment")
     public Appointment createAppointment(@RequestBody @Validated Appointment appointment) {
         return taskService.createAppointment(appointment);
-
+    }
     // ---------- DELETE SERVICE ----------
     @DeleteMapping("/service/{id}")
     public void deleteService(@PathVariable @Min(0) Long id) {

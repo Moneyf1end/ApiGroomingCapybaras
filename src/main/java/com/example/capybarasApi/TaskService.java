@@ -231,8 +231,6 @@ public class TaskService {
         log.info("Creating new appointment: {}", appointment);
         return appointmentRepository.save(appointment);
     }
-}
-
 
     // ---------- DELETE SERVICE ----------
     public void deleteService(Long id) {
