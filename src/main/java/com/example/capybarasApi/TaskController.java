@@ -7,6 +7,7 @@ import com.example.capybarasApi.dto.UpdatedOwnerByCapybaraIdResponseDto;
 import jakarta.validation.constraints.Min;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.http.HttpStatus;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
@@ -27,7 +28,7 @@ public class TaskController {
 
     @GetMapping("/service/{id}")
     // GET METHODS --------------------------------------------------------------------------------------------
-    public TypeOfService getServiceById(@PathVariable @Min(0) Long id) {
+    public TypeOfService getServiceById(@PathVariable @Min(1) Long id) {
         return taskService.getServiceById(id);
     }
 
@@ -38,7 +39,7 @@ public class TaskController {
     }
 
     @GetMapping("/capybara/{id}")
-    public Capybara getCapybaraById(@PathVariable @Min(0) Long id) {
+    public Capybara getCapybaraById(@PathVariable @Min(1) Long id) {
         return taskService.getCapybaraById(id);
     }
 
@@ -49,7 +50,7 @@ public class TaskController {
     }
 
     @GetMapping("/groomer/{id}")
-    public Groomer getGroomerById(@PathVariable @Min(0) Long id) {
+    public Groomer getGroomerById(@PathVariable @Min(1) Long id) {
         return taskService.getGroomerById(id);
     }
 
@@ -60,7 +61,7 @@ public class TaskController {
     }
 
     @GetMapping("/owner/{id}")
-    public Owner getOwnerById(@PathVariable @Min(0) Long id) {
+    public Owner getOwnerById(@PathVariable @Min(1) Long id) {
         return taskService.getOwnerById(id);
     }
 
@@ -71,42 +72,42 @@ public class TaskController {
     }
 
     @GetMapping("/appointment/{id}")
-    public Appointment getAppointmentById(@PathVariable @Min(0) Long id) {
+    public Appointment getAppointmentById(@PathVariable @Min(1) Long id) {
         return taskService.getAppointmentById(id);
     }
     // PUT(PATCH) METHODS -------------------------------------------------------------------------------------
     @PutMapping("/updateOwner/{id}")
-    public Owner updateOwnerById(@PathVariable @Min(0) Long id, @RequestBody @Validated Owner owner) {
+    public Owner updateOwnerById(@PathVariable @Min(1) Long id, @RequestBody @Validated Owner owner) {
         return taskService.updateOwnerById(id, owner);
     }
 
     @PutMapping("/updateCapybara/{id}")
-    public Capybara updateCapybaraById(@PathVariable @Min(0) Long id, @RequestBody @Validated Capybara capybara) {
+    public Capybara updateCapybaraById(@PathVariable @Min(1) Long id, @RequestBody @Validated Capybara capybara) {
         return taskService.updateCapybaraById(id, capybara);
     }
 
     @PatchMapping("/capybaras/{capybaraId}")
-    public UpdatedOwnerByCapybaraIdResponseDto changeOwnerByCapybaraId(@PathVariable @Min(0) Long capybaraId, @RequestBody @Validated UpdateOwnerByCapybaraIdRequestDto updateOwnerByCapybaraIdDto) {
+    public UpdatedOwnerByCapybaraIdResponseDto changeOwnerByCapybaraId(@PathVariable @Min(1) Long capybaraId, @RequestBody @Validated UpdateOwnerByCapybaraIdRequestDto updateOwnerByCapybaraIdDto) {
         return taskService.changeOwnerByCapybaraId(capybaraId, updateOwnerByCapybaraIdDto);
     }
 
     @PutMapping("/updateGroomer/{id}")
-    public Groomer updateGroomerById(@PathVariable @Min(0) Long id, @RequestBody @Validated Groomer groomer) {
+    public Groomer updateGroomerById(@PathVariable @Min(1) Long id, @RequestBody @Validated Groomer groomer) {
         return taskService.updateGroomerById(id, groomer);
     }
 
     @PutMapping("/updateTypeOfService/{id}")
-    public TypeOfService updateTypeOfServiceById(@PathVariable @Min(0) Long id, @RequestBody @Validated TypeOfService typeOfService) {
+    public TypeOfService updateTypeOfServiceById(@PathVariable @Min(1) Long id, @RequestBody @Validated TypeOfService typeOfService) {
         return taskService.updateTypeOfServiceById(id, typeOfService);
     }
 
     @PutMapping("/updateAppointment/{id}")
-    public Appointment updateAppointment(@PathVariable @Min(0) Long id, @RequestBody @Validated Appointment appointment) {
+    public Appointment updateAppointment(@PathVariable @Min(1) Long id, @RequestBody @Validated Appointment appointment) {
         return taskService.updateAppointment(id, appointment);
     }
 
     @PutMapping("/appointments/{id}/services")
-    public UpdateAppointmentServiceResponseDto updateAppointmentService(@PathVariable @Min(0) Long id, @RequestBody @Validated UpdateAppointmentServiceRequestDto serviceRequestDto) {
+    public UpdateAppointmentServiceResponseDto updateAppointmentService(@PathVariable @Min(1) Long id, @RequestBody @Validated UpdateAppointmentServiceRequestDto serviceRequestDto) {
         return taskService.updateAppointmentService(id, serviceRequestDto);
     }
     // ---------------- POST ----------------
@@ -136,35 +137,40 @@ public class TaskController {
     }
     // ---------- DELETE SERVICE ----------
     @DeleteMapping("/service/{id}")
-    public void deleteService(@PathVariable @Min(0) Long id) {
+    @ResponseStatus(HttpStatus.NO_CONTENT)
+    public void deleteService(@PathVariable @Min(1) Long id) {
         log.info("Deleting service with id: {}", id);
         taskService.deleteService(id);
     }
 
     // ---------- DELETE CAPYBARA ----------
     @DeleteMapping("/capybara/{id}")
-    public void deleteCapybara(@PathVariable @Min(0) Long id) {
+    @ResponseStatus(HttpStatus.NO_CONTENT)
+    public void deleteCapybara(@PathVariable @Min(1) Long id) {
         log.info("Deleting capybara with id: {}", id);
         taskService.deleteCapybara(id);
     }
 
     // ---------- DELETE GROOMER ----------
     @DeleteMapping("/groomer/{id}")
-    public void deleteGroomer(@PathVariable @Min(0) Long id) {
+    @ResponseStatus(HttpStatus.NO_CONTENT)
+    public void deleteGroomer(@PathVariable @Min(1) Long id) {
         log.info("Deleting groomer with id: {}", id);
         taskService.deleteGroomer(id);
     }
 
     // ---------- DELETE OWNER ----------
     @DeleteMapping("/owner/{id}")
-    public void deleteOwner(@PathVariable @Min(0) Long id) {
+    @ResponseStatus(HttpStatus.NO_CONTENT)
+    public void deleteOwner(@PathVariable @Min(1) Long id) {
         log.info("Deleting owner with id: {}", id);
         taskService.deleteOwner(id);
     }
 
     // ---------- DELETE APPOINTMENT ----------
     @DeleteMapping("/appointment/{id}")
-    public void deleteAppointment(@PathVariable @Min(0) Long id) {
+    @ResponseStatus(HttpStatus.NO_CONTENT)
+    public void deleteAppointment(@PathVariable @Min(1) Long id) {
         log.info("Deleting appointment with id: {}", id);
         taskService.deleteAppointment(id);
     }

@@ -4,13 +4,12 @@ import com.example.capybarasApi.dto.UpdateAppointmentServiceRequestDto;
 import com.example.capybarasApi.dto.UpdateAppointmentServiceResponseDto;
 import com.example.capybarasApi.dto.UpdateOwnerByCapybaraIdRequestDto;
 import com.example.capybarasApi.dto.UpdatedOwnerByCapybaraIdResponseDto;
+import com.example.capybarasApi.error.ResourceNotFoundException;
 import com.example.capybarasApi.mapper.TaskMapper;
 import com.example.capybarasApi.repository.*;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
-import org.springframework.web.server.ResponseStatusException;
 
 import java.util.*;
 import java.util.stream.Collectors;
@@ -26,8 +25,6 @@ public class TaskService {
     private final AppointmentRepository appointmentRepository;
     private final TaskMapper taskMapper;
 
-
-    // SERVICES
     // ---------- SERVICES ----------
 
     public Iterable<TypeOfService> getAllServices() {
@@ -38,7 +35,7 @@ public class TaskService {
     public TypeOfService getServiceById(Long id) {
         log.info("Fetching service by id: {}", id);
         return typeOfServiceRepository.findById(id)
-                .orElseThrow(() -> new RuntimeException("Service not found"));
+                .orElseThrow(() -> new ResourceNotFoundException("Service not found with id: " + id));
     }
 
     // ---------- CAPYBARAS ----------
@@ -51,7 +48,7 @@ public class TaskService {
     public Capybara getCapybaraById(Long id) {
         log.info("Fetching capybara by id: {}", id);
         return capybaraRepository.findById(id)
-                .orElseThrow(() -> new RuntimeException("Capybara not found"));
+                .orElseThrow(() -> new ResourceNotFoundException("Capybara not found with id: " + id));
     }
 
     // ---------- GROOMERS ----------
@@ -64,7 +61,7 @@ public class TaskService {
     public Groomer getGroomerById(Long id) {
         log.info("Fetching groomer by id: {}", id);
         return groomerRepository.findById(id)
-                .orElseThrow(() -> new RuntimeException("Groomer not found"));
+                .orElseThrow(() -> new ResourceNotFoundException("Groomer not found with id: " + id));
     }
 
     // ---------- OWNERS ----------
@@ -77,8 +74,9 @@ public class TaskService {
     public Owner getOwnerById(Long id) {
         log.info("Fetching owner by id: {}", id);
         return ownerRepository.findById(id)
-                .orElseThrow(() -> new RuntimeException("Owner not found"));
+                .orElseThrow(() -> new ResourceNotFoundException("Owner not found with id: " + id));
     }
+
     // ---------- APPOINTMENTS ----------
 
     public Iterable<Appointment> getAllAppointments() {
@@ -89,75 +87,50 @@ public class TaskService {
     public Appointment getAppointmentById(Long id) {
         log.info("Fetching appointment by id: {}", id);
         return appointmentRepository.findById(id)
-                .orElseThrow(() -> new RuntimeException("Appointment not found"));
+                .orElseThrow(() -> new ResourceNotFoundException("Appointment not found with id: " + id));
     }
 
+    // ---------------------- PUT METHODS ----------------------
 
-    // put methods realization
     public Owner updateOwnerById(Long id, Owner owner) {
-        Optional<Owner> ownerById = ownerRepository.findById(id);
+        Owner existingOwner = ownerRepository.findById(id)
+                .orElseThrow(() -> new ResourceNotFoundException("Owner not found with id: " + id));
 
-        if (ownerById.isPresent()) {
-            log.info(ownerById.get().toString());
+        existingOwner.setEmail(owner.getEmail());
+        existingOwner.setFullName(owner.getFullName());
+        existingOwner.setPhone(owner.getPhone());
 
-            Owner getOwnerByIdFromOptional = ownerById.get();
-
-            getOwnerByIdFromOptional.setEmail(owner.getEmail());
-            getOwnerByIdFromOptional.setFullName(owner.getFullName());
-            getOwnerByIdFromOptional.setPhone(owner.getPhone());
-
-            Owner savedOwnerAfterUpdate = ownerRepository.save(getOwnerByIdFromOptional);
-            return savedOwnerAfterUpdate;
-        }
-        log.error("Owner not found");
-        throw new ResponseStatusException(
-                HttpStatus.NOT_FOUND,
-                "Owner not found"
-        );
+        return ownerRepository.save(existingOwner);
     }
 
     public Capybara updateCapybaraById(Long id, Capybara capybara) {
-        Optional<Capybara> capybaraById = capybaraRepository.findById(id);
+        Capybara existingCapybara = capybaraRepository.findById(id)
+                .orElseThrow(() -> new ResourceNotFoundException("Capybara not found with id: " + id));
 
-        if (capybaraById.isPresent()) {
-//            log.info(capybaraById.get().toString());
+        existingCapybara.setNickName(capybara.getNickName());
+        existingCapybara.setWeightKg(capybara.getWeightKg());
+        existingCapybara.setAssType(capybara.getAssType());
+        existingCapybara.setMood(capybara.getMood());
 
-            Capybara getCapybaraByIdFromOptional = capybaraById.get();
-
-            getCapybaraByIdFromOptional.setNickName(capybara.getNickName());
-            getCapybaraByIdFromOptional.setWeightKg(capybara.getWeightKg());
-            getCapybaraByIdFromOptional.setAssType(capybara.getAssType());
-            getCapybaraByIdFromOptional.setMood(capybara.getMood());
-
-            Capybara savedCapybaraAfterUpdate = capybaraRepository.save(getCapybaraByIdFromOptional);
-            return savedCapybaraAfterUpdate;
-        }
-        log.error("Capybara not found");
-        throw new ResponseStatusException(
-                HttpStatus.NOT_FOUND,
-                "Capybara not found"
-        );
+        return capybaraRepository.save(existingCapybara);
     }
 
-    public UpdatedOwnerByCapybaraIdResponseDto changeOwnerByCapybaraId(Long id, UpdateOwnerByCapybaraIdRequestDto updateOwnerByCapybaraIdDto) {
+    public UpdatedOwnerByCapybaraIdResponseDto changeOwnerByCapybaraId(Long id, UpdateOwnerByCapybaraIdRequestDto dto) {
         Capybara capybara = capybaraRepository.findById(id)
-                .orElseThrow(() -> new
-                        ResponseStatusException(HttpStatus.NOT_FOUND, "Capybara not found"));
+                .orElseThrow(() -> new ResourceNotFoundException("Capybara not found with id: " + id));
 
-        Owner owner = ownerRepository.findById(updateOwnerByCapybaraIdDto.getOwnerId())
-                .orElseThrow(() -> new
-                        ResponseStatusException(HttpStatus.NOT_FOUND, "Owner not found"));
+        Owner owner = ownerRepository.findById(dto.getOwnerId())
+                .orElseThrow(() -> new ResourceNotFoundException("Owner not found with id: " + dto.getOwnerId()));
 
         capybara.setOwner(owner);
-
         Capybara capybaraAfterSave = capybaraRepository.save(capybara);
+
         return taskMapper.updatedOwnerByCapybaraIdResponseDto(capybaraAfterSave);
     }
 
     public Groomer updateGroomerById(Long id, Groomer groomer) {
         Groomer groomerById = groomerRepository.findById(id)
-                .orElseThrow(() -> new
-                        ResponseStatusException(HttpStatus.NOT_FOUND, "Groomer not found"));
+                .orElseThrow(() -> new ResourceNotFoundException("Groomer not found with id: " + id));
 
         groomerById.setExperience(groomer.getExperience());
         groomerById.setFullName(groomer.getFullName());
@@ -167,11 +140,9 @@ public class TaskService {
         return groomerRepository.save(groomerById);
     }
 
-    // Need to test this on postman
     public TypeOfService updateTypeOfServiceById(Long id, TypeOfService service) {
         TypeOfService serviceById = typeOfServiceRepository.findById(id)
-                .orElseThrow(() -> new
-                        ResponseStatusException(HttpStatus.NOT_FOUND, "TypeOfService not found"));
+                .orElseThrow(() -> new ResourceNotFoundException("TypeOfService not found with id: " + id));
 
         serviceById.setDescription(service.getDescription());
         serviceById.setDifficultyLevel(service.getDifficultyLevel());
@@ -183,30 +154,32 @@ public class TaskService {
 
     public Appointment updateAppointment(Long id, Appointment appointment) {
         Appointment appointmentById = appointmentRepository.findById(id)
-                .orElseThrow(() -> new
-                ResponseStatusException(HttpStatus.NOT_FOUND, "Appointment not found"));
+                .orElseThrow(() -> new ResourceNotFoundException("Appointment not found with id: " + id));
 
         appointmentById.setStartTime(appointment.getStartTime());
         appointmentById.setStatus(appointment.getStatus());
+
         return appointmentRepository.save(appointmentById);
     }
 
     public UpdateAppointmentServiceResponseDto updateAppointmentService(Long id, UpdateAppointmentServiceRequestDto serviceRequestDto) {
         Appointment appointmentByIdForService = appointmentRepository.findById(id)
-                .orElseThrow(() -> new
-                        ResponseStatusException(HttpStatus.NOT_FOUND, "Appointment not found"));
+                .orElseThrow(() -> new ResourceNotFoundException("Appointment not found with id: " + id));
 
         List<TypeOfService> listTypeOfServiceById = typeOfServiceRepository.findAllById(serviceRequestDto.getServiceIds());
 
-        if (listTypeOfServiceById.size() != serviceRequestDto.getServiceIds().size()) throw new ResponseStatusException(HttpStatus.NOT_FOUND, "Service not found");
+        if (listTypeOfServiceById.size() != serviceRequestDto.getServiceIds().size()) {
+            throw new ResourceNotFoundException("One or more services not found");
+        }
 
         appointmentByIdForService.setServices(listTypeOfServiceById);
-
         Appointment appointmentAfterSave = appointmentRepository.save(appointmentByIdForService);
 
         return taskMapper.updateAppointmentServiceResponseDto(appointmentAfterSave);
     }
+
     // ---------------------- POST METHODS ----------------------
+
     public Owner createOwner(Owner owner) {
         log.info("Creating new owner: {}", owner);
         return ownerRepository.save(owner);
@@ -232,58 +205,45 @@ public class TaskService {
         return appointmentRepository.save(appointment);
     }
 
-    // ---------- DELETE SERVICE ----------
+    // ---------------------- DELETE METHODS ----------------------
+
     public void deleteService(Long id) {
         log.info("Deleting service with id: {}", id);
-
         if (!typeOfServiceRepository.existsById(id)) {
-            throw new RuntimeException("Service not found");
+            throw new ResourceNotFoundException("Service not found with id: " + id);
         }
-
         typeOfServiceRepository.deleteById(id);
     }
 
-    // ---------- DELETE CAPYBARA ----------
     public void deleteCapybara(Long id) {
         log.info("Deleting capybara with id: {}", id);
-
         if (!capybaraRepository.existsById(id)) {
-            throw new RuntimeException("Capybara not found");
+            throw new ResourceNotFoundException("Capybara not found with id: " + id);
         }
-
         capybaraRepository.deleteById(id);
     }
 
-    // ---------- DELETE GROOMER ----------
     public void deleteGroomer(Long id) {
         log.info("Deleting groomer with id: {}", id);
-
         if (!groomerRepository.existsById(id)) {
-            throw new RuntimeException("Groomer not found");
+            throw new ResourceNotFoundException("Groomer not found with id: " + id);
         }
-
         groomerRepository.deleteById(id);
     }
 
-    // ---------- DELETE OWNER ----------
     public void deleteOwner(Long id) {
         log.info("Deleting owner with id: {}", id);
-
         if (!ownerRepository.existsById(id)) {
-            throw new RuntimeException("Owner not found");
+            throw new ResourceNotFoundException("Owner not found with id: " + id);
         }
-
         ownerRepository.deleteById(id);
     }
 
-    // ---------- DELETE APPOINTMENT ----------
     public void deleteAppointment(Long id) {
         log.info("Deleting appointment with id: {}", id);
-
         if (!appointmentRepository.existsById(id)) {
-            throw new RuntimeException("Appointment not found");
+            throw new ResourceNotFoundException("Appointment not found with id: " + id);
         }
-
         appointmentRepository.deleteById(id);
     }
 }
